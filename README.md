@@ -14,13 +14,5 @@ https://downloads.thebiogrid.org/BioGRID/Release-Archive/BIOGRID-4.4.211/
 
 and change the path in main.py 
 
-b) Create uniprot database from https://www.uniprot.org/help/downloads
-
-``mkdir uniprotDB``
-
-``wget https://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.dat.gz``
-
-split the .dat file and rename those file as uniprotID.txt
-
 3. start the query
 python main.py --id [uniprotID]

@@ -6,26 +6,30 @@
 #   Create on     : 06-21-2022
 #   Last modified : 06-21-2022 17:22
 #   Version       : V1.0
-#   Description   : 
+#   Description   :
 # ************************************************************ #
 import re
 import time
 import urllib
+from pathlib import Path
+
 from Bio import SeqIO
 from bs4 import BeautifulSoup
+
+UNIPROTDB = Path("uniprotDB")
 
 def get_function(query=""):
     """
     input: uniprotID
     output: function list
-    
+
        get protein function from uniport (original from GO annotation)
     """
     function_list=[]
     go_celllocation_list = []
     go_pathway_list = []
-    
-    with open("uniprotDB/"+query+".txt", "r") as f:
+
+    with open(Path(UNIPROTDB, query + ".txt"), "r") as f:
         page = f.readlines()
 
     for line in page:
@@ -33,9 +37,9 @@ def get_function(query=""):
             function_list.append(line.split("; ")[2][2:])
         if 'DR   GO;' in line and '; C:' in line:
             go_celllocation_list.append(line.split("; ")[2][2:])
-        if 'DR   GO;' in line and '; P:' in line: 
+        if 'DR   GO;' in line and '; P:' in line:
             go_pathway_list.append(line.split("; ")[2][2:])
- 
+
     #print(function_list, go_celllocation_list, go_pathway_list)
     return function_list, go_celllocation_list, go_pathway_list
 
@@ -44,10 +48,19 @@ def uniprot(uniprotID):
     """
     input: uniprotID
     output: sequence, subcellular location (list), genename
- 
+
         get subcellular location
     """
-    for record in SeqIO.parse("uniprotDB/"+uniprotID+".txt", "swiss"):
+    UNIPROTDB.mkdir(exist_ok=True)
+    if not Path(UNIPROTDB, uniprotID + ".txt").exists():
+        time.sleep(10)
+        print(f"Downloading UniProt info for {uniprotID}...")
+        urllib.request.urlretrieve(
+            f"https://rest.uniprot.org/uniprotkb/{uniprotID}.txt",
+            filename=Path(UNIPROTDB, f"{uniprotID}.txt"),
+            )
+
+    for record in SeqIO.parse(str(Path(UNIPROTDB, uniprotID+".txt")), "swiss"):
         resultseq = record.seq
 
         try:
