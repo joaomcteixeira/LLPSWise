@@ -1,0 +1,23 @@
+name: llpswise
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - torchvision
+  - urllib3
+  - xlrd
+  - beautifulsoup4
+  - fair-esm
+  - Flask
+  - networkx
+  - numpy
+  - openpyxl
+  - pandas
+  - scikit-learn
+  - scipy
+  - matplotlib
+  - pip
+  - pip:
+    - bs4
+    - torch
+    - pyecharts
